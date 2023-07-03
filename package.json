@@ -1,0 +1,24 @@
+{
+  "akitaCli": {
+    "template": "angular",
+    "basePath": "./src/app",
+    "customFolderName": "true"
+  },
+  "private": true,
+  "dependencies": {
+    "@msgpack/msgpack": "^2.7.2",
+    "ripple-keypairs": "^1.1.4",
+    "xrpl": "^2.5.0",
+    "rxjs": "^7.5.7",
+    "tweetnacl": "^1.0.3",
+    "@stablelib/hkdf": "^1.0.1",
+    "@stablelib/sha256": "^1.0.1",
+    "@stablelib/x25519": "^1.0.3"
+  },
+  "devDependencies": {
+    "typescript": "~4.5.4",
+    "@types/node": "^20.3.2",
+    "axios": "^1.4.0"
+  },
+  "description": "An Ionic project"
+}
