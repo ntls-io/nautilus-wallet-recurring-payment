@@ -1,0 +1,46 @@
+/.angular/cache
+# Specifies intentionally untracked files to ignore when using Git
+# http://git-scm.com/docs/gitignore
+
+*~
+*.sw[mnpcod]
+.tmp
+*.tmp
+*.tmp.*
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+UserInterfaceState.xcuserstate
+$RECYCLE.BIN/
+*.js
+*.log
+log.txt
+npm-debug.log*
+
+/.idea
+/.ionic
+/.sass-cache
+/.sourcemaps
+/.versions
+/.vscode
+/coverage
+/dist
+/documentation
+/documentation.json
+/node_modules
+/platforms
+/ios
+/android
+/plugins
+/storybook-static
+/www
+
+resources/ios/**/*
+resources/android/**/*
+/resources/ios/**/*
+/resources/android/**/*
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json
