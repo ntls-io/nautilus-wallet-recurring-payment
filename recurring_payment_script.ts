@@ -12,6 +12,7 @@ import {
 } from './xrpl.util';
 import { withLoggedExchange } from './console.helpers';
 import { panic } from './panic';
+import { IssuedCurrencyAmount } from "xrpl/dist/npm/models/common";
 
 // Create instances of XrplService and EnclaveService
 const xrplService = new XrplService();
@@ -36,14 +37,26 @@ async function checkRecurringPayments() {
 
         for (const payment of recurringPayments) {
             // 2. Create unsigned transactions
-            const { wallet_id, recipient, amount } = payment;
+            const { wallet_id, recipient, amount, currency_code } = payment;
             const fromAddress = wallet_id;
             const toAddress = recipient;
-            const dropsAmount = xrpl.xrpToDrops(amount);
+            let convertedAmount: string | IssuedCurrencyAmount = "";
+            if (currency_code === 'XRP') {
+                console.log("Currency Code is XRP")
+                convertedAmount = xrpl.xrpToDrops(amount);
+            } else {
+                console.log("Currency Code is a TOKEN")
+                convertedAmount = {
+                    currency: currency_code,
+                    issuer: 'rpJv16Qmn2rQP6UC6UFsNRnVy5arkQihPP', // FOO issuer
+                    value: amount.toString()
+                }
+            }
+            convertedAmount = xrpl.xrpToDrops(amount);
             const unsignedTx = await xrplService.createUnsignedPaymentTransaction(
                 fromAddress,
                 toAddress,
-                dropsAmount
+                convertedAmount
             );
             console.log('2. Create Unsigned Transaction:', unsignedTx);
 
