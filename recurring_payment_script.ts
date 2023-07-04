@@ -92,7 +92,9 @@ async function checkRecurringPayments() {
                     // 5. Call update_last_paid
                     if (txSucceeded.succeeded) {
                         const today = new Date();
-                        const ordinalValue = getOrdinalValue(today);
+                        console.log("Today:", today);
+                        const ordinalValue = getDateToOrdinal(today);
+                        console.log("ordidnalValue: ", ordinalValue);
                         await updateLastPaid(payment.id, ordinalValue);
 
                         console.log(`[${ordinalValue}] Last paid date updated successfully for recurring payment ID ${payment.id}`);
@@ -126,18 +128,29 @@ async function updateLastPaid(recurring_payment_id: string, last_paid_date: numb
 
 checkRecurringPayments();
 
-function getOrdinalValue(date: Date): number {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // JavaScript months are zero-based
-    const dayOfMonth = date.getDate();
+const _DAYS_IN_MONTH: number[] = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-    // Formula to calculate proleptic Gregorian ordinal
-    const ordinalValue =
-        (1461 * (year + 4800 + (month - 14) / 12)) / 4 +
-        (367 * (month - 2 - 12 * ((month - 14) / 12))) / 12 -
-        (3 * ((year + 4900 + (month - 14) / 12) / 100)) / 4 +
-        dayOfMonth -
-        32075;
-
-    return ordinalValue;
+function isLeapYear(year: number): boolean {
+    // year -> 1 if leap year, else 0.
+    return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 }
+
+function getDateToOrdinal(date: Date): number {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    return (
+        (year - 1) * 365 +
+        Math.floor((year - 1) / 4) -
+        Math.floor((year - 1) / 100) +
+        Math.floor((year - 1) / 400) +
+        _DAYS_IN_MONTH.slice(1, month).reduce((acc, curr) => acc + curr, 0) +
+        (month > 2 && isLeapYear(year) ? 1 : 0) +
+        day
+    );
+}
+
+
+
+
