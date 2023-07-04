@@ -1,6 +1,6 @@
-import { defined } from './panic';
-import * as xrpl from 'xrpl';
-import { IssuedCurrencyAmount } from 'xrpl/dist/npm/models/common';
+import { defined } from './panic'
+import * as xrpl from 'xrpl'
+import { IssuedCurrencyAmount } from 'xrpl/dist/npm/models/common'
 
 /**
  * This service wraps an instance of the xrpl {@link xrpl.Client},
@@ -14,7 +14,7 @@ import { IssuedCurrencyAmount } from 'xrpl/dist/npm/models/common';
 export class XrplService {
     constructor() {
         // Call this once on construction as a smoke test.
-        this.getClient();
+        this.getClient()
     }
 
     /**
@@ -25,7 +25,7 @@ export class XrplService {
     async ping(): Promise<xrpl.PingResponse> {
         return this.withConnection(
             async (client) => await client.request({ command: 'ping' })
-        );
+        )
     }
 
     /**
@@ -49,7 +49,7 @@ export class XrplService {
                     ...request,
                     command: 'account_info',
                 })
-        );
+        )
     }
 
     /**
@@ -71,7 +71,7 @@ export class XrplService {
                     ...request,
                     command: 'account_lines',
                 })
-        );
+        )
     }
 
     /**
@@ -82,7 +82,7 @@ export class XrplService {
     async getBalances(address: string): Promise<Balance[]> {
         return await this.withConnection(
             async (client) => await client.getBalances(address)
-        );
+        )
     }
     async createUnsignedPaymentTransaction(
         fromAddress: string,
@@ -95,10 +95,10 @@ export class XrplService {
             Amount: amount,
             Destination: toAddress,
             DestinationTag: 0,
-        };
+        }
         return await this.withConnection(
             async (client) => await client.autofill(unpreparedTx)
-        );
+        )
     }
 
     async createUnsignedDeleteTransaction(
@@ -109,11 +109,11 @@ export class XrplService {
             Account: fromAddress,
             TransactionType: 'AccountDelete',
             Destination: toAddress,
-        };
+        }
         const tX = await this.withConnection(
             async (client) => await client.autofill(unpreparedTx)
-        );
-        return tX;
+        )
+        return tX
     }
 
     async createUnsignedTrustSetTx(
@@ -125,14 +125,14 @@ export class XrplService {
             Account: fromAddress,
             TransactionType: 'TrustSet',
             LimitAmount: limitAmount,
-        };
+        }
         if (typeof flags !== 'undefined') {
-            unpreparedTx.Flags = flags;
+            unpreparedTx.Flags = flags
         }
 
         return await this.withConnection(
             async (client) => await client.autofill(unpreparedTx)
-        );
+        )
     }
 
     /**
@@ -146,7 +146,7 @@ export class XrplService {
     ): Promise<xrpl.TxResponse> {
         return await this.withConnection(
             async (client) => await client.submitAndWait(signedTxEncoded)
-        );
+        )
     }
 
     /**
@@ -161,7 +161,7 @@ export class XrplService {
                     command: 'account_tx',
                     account,
                 })
-        );
+        )
     }
 
     // For Reference: https://github.com/XRPLF/xrpl.js/blob/6e4868e6c7a03f0d48de1ddee5d9a88700ab5a7c/src/transaction/sign.ts#L54
@@ -196,12 +196,12 @@ export class XrplService {
     protected async withConnection<T>(
         f: (client: xrpl.Client) => Promise<T>
     ): Promise<T> {
-        const xrplClient = this.getClient();
+        const xrplClient = this.getClient()
         try {
-            await xrplClient.connect();
-            return await f(xrplClient);
+            await xrplClient.connect()
+            return await f(xrplClient)
         } finally {
-            await xrplClient.disconnect();
+            await xrplClient.disconnect()
         }
     }
 
@@ -211,17 +211,17 @@ export class XrplService {
             options: {
                 connectionTimeout: 20000,
             },
-        };
+        }
         const { server, options } = defined(
             xrplClient,
             'xrplClient not configured'
-        );
-        return new xrpl.Client(server, options);
+        )
+        return new xrpl.Client(server, options)
     }
 }
 
 export type Balance = {
-    value: string;
-    currency: string;
-    issuer?: string;
-};
+    value: string
+    currency: string
+    issuer?: string
+}

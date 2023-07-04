@@ -6,39 +6,39 @@ export const withConsoleGroup = async <R>(
     label: string,
     f: () => Promise<R>
 ): Promise<R> => {
-    console.group(label);
+    console.group(label)
     try {
-        return await f();
+        return await f()
     } finally {
-        console.groupEnd();
+        console.groupEnd()
     }
-};
+}
 
 export const withConsoleGroupCollapsed = async <R>(
     label: string,
     f: () => Promise<R>
 ): Promise<R> => {
-    console.groupCollapsed(label);
+    console.groupCollapsed(label)
     try {
-        return await f();
+        return await f()
     } finally {
-        console.groupEnd();
+        console.groupEnd()
     }
-};
+}
 
 export const withConsoleTimer = async <R>(
     label: string,
     f: () => Promise<R>
 ): Promise<R> => {
     // eslint-disable-next-line no-console
-    console.time(label);
+    console.time(label)
     try {
-        return await f();
+        return await f()
     } finally {
         // eslint-disable-next-line no-console
-        console.timeEnd(label);
+        console.timeEnd(label)
     }
-};
+}
 
 export const withLoggedExchange = async <Request, Response>(
     label: string,
@@ -49,9 +49,9 @@ export const withLoggedExchange = async <Request, Response>(
         label,
         async () =>
             await withConsoleTimer(`[${label}] took`, async () => {
-                console.log('request:', request);
-                const response = await f(request);
-                console.log('response:', response);
-                return response;
+                console.log('request:', request)
+                const response = await f(request)
+                console.log('response:', response)
+                return response
             })
-    );
+    )
