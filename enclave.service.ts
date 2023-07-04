@@ -1,13 +1,13 @@
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { withLoggedExchange } from './console.helpers';
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { withLoggedExchange } from './console.helpers'
 import {
     SignTransactionRecurringPayment,
     SignTransactionRecurringPaymentResult,
-} from './actions';
-import { AttestationReport } from './attestation';
-import { PublicKey, TweetNaClCrypto } from './crypto';
-import { from_msgpack_as } from './msgpack';
-import { seal_msgpack_as, unseal_msgpack_as } from './sealing';
+} from './actions'
+import { AttestationReport } from './attestation'
+import { PublicKey, TweetNaClCrypto } from './crypto'
+import { from_msgpack_as } from './msgpack'
+import { seal_msgpack_as, unseal_msgpack_as } from './sealing'
 /**
  * This service handles communication with the wallet enclave.
  */
@@ -15,50 +15,54 @@ export class EnclaveService {
     constructor(private http: AxiosInstance) {}
 
     async getEnclaveReport(): Promise<AttestationReport> {
-        const bytes = await this.walletApiGetBytes('enclave-report');
-        return from_msgpack_as<AttestationReport>(bytes);
+        const bytes = await this.walletApiGetBytes('enclave-report')
+        return from_msgpack_as<AttestationReport>(bytes)
     }
 
     async getEnclavePublicKey(): Promise<PublicKey> {
-        const report: AttestationReport = await this.getEnclaveReport();
+        const report: AttestationReport = await this.getEnclaveReport()
         // XXX: msgpack returns Array<number>: coerce to Uint8Array for tweetnacl
-        return new Uint8Array(report.enclave_public_key);
+        return new Uint8Array(report.enclave_public_key)
     }
 
     async signTransactionRecurringPayment(
         request: SignTransactionRecurringPayment
     ): Promise<SignTransactionRecurringPaymentResult> {
-        const walletRequest = { SignTransactionRecurringPayment: request };
+        const walletRequest = { SignTransactionRecurringPayment: request }
         const response = await this.postSealedExchange<
-            { SignTransactionRecurringPayment: SignTransactionRecurringPayment },
-            { SignTransactionRecurringPayment: SignTransactionRecurringPaymentResult }
-        >(walletRequest);
-        const { SignTransactionRecurringPayment: result } = response;
-        return result;
+            {
+                SignTransactionRecurringPayment: SignTransactionRecurringPayment
+            },
+            {
+                SignTransactionRecurringPayment: SignTransactionRecurringPaymentResult
+            }
+        >(walletRequest)
+        const { SignTransactionRecurringPayment: result } = response
+        return result
     }
 
     // HTTP helpers
 
     protected async walletApiGetBytes(path: string): Promise<Uint8Array> {
-        const url = this.getWalletApiUrl(path);
+        const url = this.getWalletApiUrl(path)
         const response = await this.http.get<ArrayBuffer>(url, {
             responseType: 'arraybuffer',
-        });
+        })
 
         //return arrayViewFromBuffer(bufferToArrayBuffer(response.data));
-        return arrayViewFromBuffer((response.data));
+        return arrayViewFromBuffer(response.data)
     }
 
     protected async walletApiPostBytes(
         path: string,
         bytes: Uint8Array
     ): Promise<Uint8Array> {
-        const url = this.getWalletApiUrl(path);
+        const url = this.getWalletApiUrl(path)
         const config: AxiosRequestConfig = {
             responseType: 'arraybuffer',
-        };
-        const response = await this.http.post<ArrayBuffer>(url, bytes, config);
-        return arrayViewFromBuffer(response.data);
+        }
+        const response = await this.http.post<ArrayBuffer>(url, bytes, config)
+        return arrayViewFromBuffer(response.data)
     }
 
     protected async postSealedExchange<Request, Response>(
@@ -68,41 +72,41 @@ export class EnclaveService {
             'EnclaveService.postSealedExchange:',
             () => this.postSealedExchangeInner(request),
             request
-        );
+        )
     }
 
     protected async postSealedExchangeInner<Request, Response>(
         request: Request
     ): Promise<Response> {
-        const clientCrypto = TweetNaClCrypto.new();
+        const clientCrypto = TweetNaClCrypto.new()
 
-        const enclavePublicKey = await this.getEnclavePublicKey();
+        const enclavePublicKey = await this.getEnclavePublicKey()
 
         const sealedRequestBytes = seal_msgpack_as<Request>(
             request,
             enclavePublicKey,
             clientCrypto
-        );
+        )
         const sealedResponseBytes = await this.walletApiPostBytes(
             'wallet-operation',
             sealedRequestBytes
-        );
+        )
         const response = unseal_msgpack_as<Response>(
             sealedResponseBytes,
             clientCrypto
-        );
+        )
         if (response !== null) {
-            return response;
+            return response
         } else {
-            console.error('XXX unsealing failed:', { sealedResponseBytes });
-            throw new Error('unsealing response failed!');
+            console.error('XXX unsealing failed:', { sealedResponseBytes })
+            throw new Error('unsealing response failed!')
         }
     }
 
     // Configuration helpers:
 
     protected getWalletApiUrl(path: string): string {
-        return new URL(path, "https://wallet-staging-api.ntls.io/"  ).toString();
+        return new URL(path, 'https://wallet-staging-api.ntls.io/').toString()
     }
 }
 
@@ -115,8 +119,8 @@ export class EnclaveService {
 // so this code checks the types at run-time to avoid hard-to-diagnose errors.
 
 export const arrayViewFromBuffer = (buffer: ArrayBuffer): Uint8Array => {
-    return new Uint8Array(buffer);
-};
+    return new Uint8Array(buffer)
+}
 
 /**
  * Converts a Node.js Buffer object to an ArrayBuffer.

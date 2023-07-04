@@ -7,31 +7,31 @@ import {
     XrplAddressBase58,
     XrplKeyType,
     XrplPublicKeyHex,
-} from './types';
+} from './types'
 
 /** A Nautilus wallet's basic displayable details. */
 export type WalletDisplay = {
-    wallet_id: WalletId;
-    owner_name: string;
-    phone_number?: string;
-    otp_phone_number?: string;
+    wallet_id: WalletId
+    owner_name: string
+    phone_number?: string
+    otp_phone_number?: string
 
-    algorand_address_base32: AlgorandAddressBase32;
-    xrpl_account: XrplAccountDisplay;
-};
+    algorand_address_base32: AlgorandAddressBase32
+    xrpl_account: XrplAccountDisplay
+}
 
 // Algorand entities:
 
 /** An Algorand account. */
 export type AlgorandAccount = {
-    seed_bytes: AlgorandAccountSeedBytes;
-};
+    seed_bytes: AlgorandAccountSeedBytes
+}
 
 // XRPL entities:
 
 /** An XRP account's displayable details. */
 export type XrplAccountDisplay = {
-    key_type: XrplKeyType;
-    public_key_hex: XrplPublicKeyHex;
-    address_base58: XrplAddressBase58;
-};
+    key_type: XrplKeyType
+    public_key_hex: XrplPublicKeyHex
+    address_base58: XrplAddressBase58
+}

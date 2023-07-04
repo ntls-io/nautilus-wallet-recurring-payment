@@ -12,15 +12,15 @@
  * @see https://github.com/XRPLF/xrpl.js/blob/xrpl%402.2.1/packages/xrpl/src/Wallet/index.ts#L257-L305
  */
 
-import { bytesToHex, hexToBytes } from 'ripple-keypairs/dist/utils';
-import { panic } from './panic';
-import * as xrpl from 'xrpl';
+import { bytesToHex, hexToBytes } from 'ripple-keypairs/dist/utils'
+import { panic } from './panic'
+import * as xrpl from 'xrpl'
 
 /**
  * Convenience type alias for simple hex-encoded binary data,
  * as used throughout XRPL.
  */
-export type HexString = string;
+export type HexString = string
 
 /**
  * Prepare to sign `txnUnsigned` with `signingPubKey`.
@@ -39,12 +39,12 @@ export const txnBeforeSign = (
     const txnBeingSigned: xrpl.Transaction = {
         ...txnUnsigned,
         SigningPubKey: signingPubKey,
-    };
+    }
     return {
         txnBeingSigned,
         bytesToSignEncoded: xrpl.encodeForSigning(txnBeingSigned),
-    };
-};
+    }
+}
 
 /**
  * Combine `txnBeingSigned` with its `txnSignature`
@@ -62,15 +62,15 @@ export const txnAfterSign = (
     const txnSigned: xrpl.Transaction = {
         ...txnBeingSigned,
         TxnSignature: txnSignature,
-    };
-    return { txnSigned, txnSignedEncoded: xrpl.encode(txnSigned) };
-};
+    }
+    return { txnSigned, txnSignedEncoded: xrpl.encode(txnSigned) }
+}
 
 /**
  * Like {@link hexToBytes}, but produce {@link Uint8Array}.
  */
 export const hexToUint8Array = (hex: HexString): Uint8Array =>
-    Uint8Array.from(hexToBytes(hex));
+    Uint8Array.from(hexToBytes(hex))
 
 /**
  * Like {@link bytesToHex}, but consume {@link Uint8Array}.
@@ -79,20 +79,20 @@ export const hexToUint8Array = (hex: HexString): Uint8Array =>
  * - <https://github.com/XRPLF/xrpl.js/pull/1975>
  */
 export const uint8ArrayToHex = (array: Uint8Array): HexString =>
-    bytesToHex(Array.from(array));
+    bytesToHex(Array.from(array))
 
 // Background: https://xrpl.org/reliable-transaction-submission.html#verification
 
 export type TxSuccessReport = {
-    succeeded: boolean;
-    resultCode: xrpl.TransactionMetadata['TransactionResult'];
-};
+    succeeded: boolean
+    resultCode: xrpl.TransactionMetadata['TransactionResult']
+}
 
 /** Check whether a transaction succeeded, by response. */
 export const checkTxResponseSucceeded = (
     txResponse: xrpl.TxResponse
 ): TxSuccessReport =>
-    checkTransactionMetadataSucceeded(getTxResponseMetadata(txResponse));
+    checkTransactionMetadataSucceeded(getTxResponseMetadata(txResponse))
 
 /** Check whether a transaction succeeded, by metadata. */
 export const checkTransactionMetadataSucceeded = (
@@ -100,22 +100,22 @@ export const checkTransactionMetadataSucceeded = (
 ): TxSuccessReport => ({
     succeeded: meta.TransactionResult === 'tesSUCCESS',
     resultCode: meta.TransactionResult,
-});
+})
 
 /** Get transaction metadata from response, or panic. */
 export const getTxResponseMetadata = (
     txResponse: xrpl.TxResponse
 ): xrpl.TransactionMetadata => {
-    const meta = txResponse.result.meta;
+    const meta = txResponse.result.meta
     if (typeof meta === 'string') {
         throw panic('getTxResponseMetadata: unexpected string meta:', {
             txResponse,
-        });
+        })
     } else if (meta === undefined) {
         throw panic('getTxResponseMetadata: unexpected undefined meta:', {
             txResponse,
-        });
+        })
     } else {
-        return meta;
+        return meta
     }
-};
+}
