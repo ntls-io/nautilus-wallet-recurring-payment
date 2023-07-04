@@ -44,10 +44,8 @@ async function checkRecurringPayments() {
             const toAddress = recipient
             let convertedAmount: string | IssuedCurrencyAmount = ''
             if (currency_code === 'XRP') {
-                console.log('Currency Code is XRP')
                 convertedAmount = xrpl.xrpToDrops(amount)
             } else {
-                console.log('Currency Code is a TOKEN')
                 convertedAmount = {
                     currency: currency_code,
                     issuer: 'rpJv16Qmn2rQP6UC6UFsNRnVy5arkQihPP', // FOO issuer
