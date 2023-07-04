@@ -37,3 +37,13 @@ Run this command to run prettier.
 ```shell
 npm run format
 ````
+
+## CronJob
+Make the shell script executable by running the following command:
+```shell
+chmod +x setup_cron.sh
+```
+Now you can execute the shell script to set up the cron job by running:
+```shell
+./setup_cron.sh
+```
