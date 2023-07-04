@@ -7,18 +7,25 @@
   "private": true,
   "dependencies": {
     "@msgpack/msgpack": "^2.7.2",
-    "ripple-keypairs": "^1.1.4",
-    "xrpl": "^2.5.0",
-    "rxjs": "^7.5.7",
-    "tweetnacl": "^1.0.3",
     "@stablelib/hkdf": "^1.0.1",
     "@stablelib/sha256": "^1.0.1",
-    "@stablelib/x25519": "^1.0.3"
+    "@stablelib/x25519": "^1.0.3",
+    "ripple-keypairs": "^1.1.4",
+    "rxjs": "^7.5.7",
+    "tweetnacl": "^1.0.3",
+    "xrpl": "^2.5.0"
   },
   "devDependencies": {
-    "typescript": "~4.5.4",
     "@types/node": "^20.3.2",
-    "axios": "^1.4.0"
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "axios": "^1.4.0",
+    "eslint": "^8.44.0",
+    "eslint-config-standard-with-typescript": "^36.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "typescript": "^5.1.6"
   },
   "description": "An Ionic project"
 }
