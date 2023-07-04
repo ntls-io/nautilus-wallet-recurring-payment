@@ -54,7 +54,7 @@ async function checkRecurringPayments() {
                     value: amount.toString(),
                 }
             }
-            convertedAmount = xrpl.xrpToDrops(amount)
+
             const unsignedTx =
                 await xrplService.createUnsignedPaymentTransaction(
                     fromAddress,
