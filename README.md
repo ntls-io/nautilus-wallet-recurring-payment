@@ -25,3 +25,10 @@ To execute the recurring payment script, run the following command:
 ```shell
 node recurring_payment_script.js
 ```
+
+## ESLint
+Run the ESLint command with the --fix flag followed by the file or directory you want to lint and fix.
+
+```shell
+npx eslint --fix *.ts
+```

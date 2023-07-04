@@ -124,7 +124,7 @@ export class DiffieHellman {
      */
     diffie_hellman = (
         their_pk: PublicKey,
-        secret_length: number = 32
+        secret_length = 32
     ): SharedSecret => {
         this.finish(their_pk);
         const raw_shared_key: SharedSecret = this.x25519.getSharedKey();
