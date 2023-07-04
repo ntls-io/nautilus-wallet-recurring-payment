@@ -1,4 +1,3 @@
-import { checkRippledErrorResponse } from './xrpl.util';
 import { defined } from './panic';
 import * as xrpl from 'xrpl';
 import { IssuedCurrencyAmount } from 'xrpl/dist/npm/models/common';
@@ -51,32 +50,6 @@ export class XrplService {
                     command: 'account_info',
                 })
         );
-    }
-
-    /**
-     * Like {@link getAccountInfo}, but catch and return `undefined` for `actNotFound` errors.
-     */
-    async getAccountInfoIfExists(
-        request: Omit<xrpl.AccountInfoRequest, 'command'>
-    ): Promise<xrpl.AccountInfoResponse | undefined> {
-        try {
-            return await this.getAccountInfo(request);
-        } catch (err) {
-            const errorResponse: xrpl.ErrorResponse | undefined =
-                checkRippledErrorResponse(err);
-            if (errorResponse !== undefined) {
-                // Docs: https://xrpl.org/account_info.html#possible-errors
-                if (errorResponse.error === 'actNotFound') {
-                    return undefined;
-                } else {
-                    console.log(
-                        'XrplService.getAccountInfoIfExists: unrecognised ErrorResponse:',
-                        { errorResponse }
-                    );
-                }
-            }
-            throw err;
-        }
     }
 
     /**
