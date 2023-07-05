@@ -19,6 +19,7 @@ const xrplService = new XrplService()
 const enclaveService = new EnclaveService(createAxiosInstance())
 
 const API_BASE_URL = 'https://wallet-staging-api.ntls.io'
+const ISSUER = 'rpJv16Qmn2rQP6UC6UFsNRnVy5arkQihPP'
 
 // Function to create an instance of Axios with default configuration
 function createAxiosInstance(): AxiosInstance {
@@ -48,7 +49,7 @@ async function checkRecurringPayments() {
             } else {
                 convertedAmount = {
                     currency: currency_code,
-                    issuer: 'rpJv16Qmn2rQP6UC6UFsNRnVy5arkQihPP', // FOO issuer
+                    issuer: ISSUER,
                     value: amount.toString(),
                 }
             }
