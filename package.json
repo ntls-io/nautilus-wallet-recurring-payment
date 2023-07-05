@@ -1,10 +1,4 @@
 {
-  "akitaCli": {
-    "template": "angular",
-    "basePath": "./src/app",
-    "customFolderName": "true"
-  },
-  "private": true,
   "dependencies": {
     "@msgpack/msgpack": "^2.7.2",
     "@stablelib/hkdf": "^1.0.1",
