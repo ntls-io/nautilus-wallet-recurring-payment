@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENV="env"
+ENV="palau-staging"
 
 # Path to the script
 TS_SCRIPT_PATH="$HOME/nautilus-wallet-recurring-payment/recurring_payment_script.ts"
