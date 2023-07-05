@@ -18,7 +18,7 @@ import { IssuedCurrencyAmount } from 'xrpl/dist/npm/models/common'
 const xrplService = new XrplService()
 const enclaveService = new EnclaveService(createAxiosInstance())
 
-const API_BASE_URL = 'https://wallet-staging-api.ntls.io'
+const API_BASE_URL = 'https://wallet-demo-api.ntls.io'
 const ISSUER = 'rpJv16Qmn2rQP6UC6UFsNRnVy5arkQihPP'
 
 // Function to create an instance of Axios with default configuration
