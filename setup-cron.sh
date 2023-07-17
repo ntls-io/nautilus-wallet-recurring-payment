@@ -52,37 +52,21 @@ npx tsc "$TS_SCRIPT_PATH_PALAU_DEMO"
 npx tsc "$TS_SCRIPT_PATH_BHUTAN_STAGING"
 npx tsc "$TS_SCRIPT_PATH_BHUTAN_DEMO"
 
-# Add the cron job with the generated log file name
-CRON_JOB_NTLS_STAGING="0 7 * * * node $JS_SCRIPT_PATH_NTLS_STAGING >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_NTLS_STAGING/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1"
-CRON_JOB_NTLS_DEMO="0 7 * * * node $JS_SCRIPT_PATH_NTLS_DEMO >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_NTLS_DEMO/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1"
-CRON_JOB_PALAU_STAGING="0 7 * * * node $JS_SCRIPT_PATH_PALAU_STAGING >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_PALAU_STAGING/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1"
-CRON_JOB_PALAU_DEMO="0 7 * * * node $JS_SCRIPT_PATH_PALAU_DEMO >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_PALAU_DEMO/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1"
-CRON_JOB_BHUTAN_STAGING="0 7 * * * node $JS_SCRIPT_PATH_BHUTAN_STAGING >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_BHUTAN_STAGING/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1"
-CRON_JOB_BHUTAN_DEMO="0 7 * * * node $JS_SCRIPT_PATH_BHUTAN_DEMO >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_BHUTAN_DEMO/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1"
+# Create a temporary file for the consolidated cron job
+CRON_JOB_TEMP_FILE="/tmp/cronjob_temp"
 
-# Write the cron job to a temporary file
-echo "$CRON_JOB_NTLS_STAGING" > /tmp/cronjob_1
-echo "$CRON_JOB_NTLS_DEMO" > /tmp/cronjob_2
-echo "$CRON_JOB_PALAU_STAGING" > /tmp/cronjob_3
-echo "$CRON_JOB_PALAU_DEMO" > /tmp/cronjob_4
-echo "$CRON_JOB_BHUTAN_STAGING" > /tmp/cronjob_5
-echo "$CRON_JOB_BHUTAN_DEMO" > /tmp/cronjob_6
+# Add all cron jobs to the temporary file
+echo "0 7 * * * node $JS_SCRIPT_PATH_NTLS_STAGING >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_NTLS_STAGING/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1" > "$CRON_JOB_TEMP_FILE"
+echo "0 7 * * * node $JS_SCRIPT_PATH_NTLS_DEMO >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_NTLS_DEMO/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1" >> "$CRON_JOB_TEMP_FILE"
+echo "0 7 * * * node $JS_SCRIPT_PATH_PALAU_STAGING >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_PALAU_STAGING/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1" >> "$CRON_JOB_TEMP_FILE"
+echo "0 7 * * * node $JS_SCRIPT_PATH_PALAU_DEMO >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_PALAU_DEMO/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1" >> "$CRON_JOB_TEMP_FILE"
+echo "0 7 * * * node $JS_SCRIPT_PATH_BHUTAN_STAGING >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_BHUTAN_STAGING/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1" >> "$CRON_JOB_TEMP_FILE"
+echo "0 7 * * * node $JS_SCRIPT_PATH_BHUTAN_DEMO >> $HOME/nautilus-wallet-recurring-payment/logs/$ENV_BHUTAN_DEMO/logfile_\`date +\%F+\%H:\%M:\%S\`.log 2>&1" >> "$CRON_JOB_TEMP_FILE"
 
-# Install the cron job
-crontab /tmp/cronjob_1
-crontab /tmp/cronjob_2
-crontab /tmp/cronjob_3
-crontab /tmp/cronjob_4
-crontab /tmp/cronjob_5
-crontab /tmp/cronjob_6
+# Install the consolidated cron job
+crontab "$CRON_JOB_TEMP_FILE"
 
 # Remove the temporary file
-rm /tmp/cronjob_1
-rm /tmp/cronjob_2
-rm /tmp/cronjob_3
-rm /tmp/cronjob_4
-rm /tmp/cronjob_5
-rm /tmp/cronjob_6
+rm "$CRON_JOB_TEMP_FILE"
 
 echo "Cron job has been set up successfully."
-
