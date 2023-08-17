@@ -106,7 +106,7 @@ export class EnclaveService {
     // Configuration helpers:
 
     protected getWalletApiUrl(path: string): string {
-        return new URL(path, 'https://wallet-staging-api.ntls.io/').toString()
+        return new URL(path, 'https://trusted-contract-main-api.ntls.io/').toString()
     }
 }
 

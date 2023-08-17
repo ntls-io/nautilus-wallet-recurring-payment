@@ -1,6 +1,8 @@
-# Nautilus Wallet Recurring Payment
+# Trusted Contract Oracle Node Functionality
 
-This repository contains the implementation of the Nautilus Wallet recurring payment script.
+This repository contains the follolwing functions in escrow_funcitons.ts:
+* create unsigned transactions
+* signTransactionAndSubmit
 
 ## Installation
 
@@ -14,7 +16,7 @@ npm install
 To transpile the TypeScript code to JavaScript, use the TypeScript compiler (tsc). Run the following command:
 
 ```shell
-tsc recurring_payment_script.ts
+tsc escrow_functions.ts
 ```
 
 This will generate the JavaScript file `recurring_payment_script.js`.
@@ -23,7 +25,7 @@ This will generate the JavaScript file `recurring_payment_script.js`.
 To execute the recurring payment script, run the following command:
 
 ```shell
-node recurring_payment_script.js
+node escrow_functions.js
 ```
 
 ## Lint and Format
@@ -38,12 +40,3 @@ Run this command to run prettier.
 npm run format
 ````
 
-## CronJob
-Make the shell script executable by running the following command:
-```shell
-chmod +x setup_cron.sh
-```
-Now you can execute the shell script to set up the cron job by running:
-```shell
-./setup_cron.sh
-```
