@@ -140,6 +140,7 @@ var __generator =
         }
     }
 Object.defineProperty(exports, '__esModule', { value: true })
+exports.signTransactionAndSubmit = exports.createUnsignedTransaction = void 0
 var axios_1 = require('axios')
 var xrpl = require('xrpl')
 var xrpl_service_1 = require('./xrpl.service')
@@ -150,22 +151,19 @@ var panic_1 = require('./panic')
 // Create instances of XrplService and EnclaveService
 var xrplService = new xrpl_service_1.XrplService()
 var enclaveService = new enclave_service_1.EnclaveService(createAxiosInstance())
+
 var API_BASE_URL = process.env.API_BASE_URL // 'https://trusted-contract-main-api.ntls.io'
 var ISSUER = process.env.ISSUER_ACCOUNT //'rHqubSujbYhxBRYvdb63RMQYdE5AXJSCbT'
 var ESCROW = process.env.ESCROW_ACCOUNT //'rs87c62UQPGWRUddpbtws2GPn2Bj4khAgm'
 var ESCROW_PUBLIC_KEY = process.env.ESCROW_PUBLIC_KEY //'03A9FACA59447F3059C66D1574B9B20DE106DE6339BAF4D9BB89D70B6560D8341D'
+
 // Function to create an instance of Axios with default configuration
 function createAxiosInstance() {
     return axios_1.default.create({
         baseURL: API_BASE_URL,
     })
 }
-
-exports.createUnsignedTransaction = function createUnsignedTransaction(
-    recipient,
-    currency_code,
-    amount
-) {
+function createUnsignedTransaction(recipient, currency_code, amount) {
     return __awaiter(this, void 0, void 0, function () {
         var fromAddress, toAddress, convertedAmount, unsignedTx
         return __generator(this, function (_a) {
@@ -200,10 +198,8 @@ exports.createUnsignedTransaction = function createUnsignedTransaction(
         })
     })
 }
-
-exports.signTransactionAndSubmit = function signTransactionAndSubmit(
-    unsignedTx
-) {
+exports.createUnsignedTransaction = createUnsignedTransaction
+function signTransactionAndSubmit(unsignedTx) {
     return __awaiter(this, void 0, void 0, function () {
         var _a,
             txnBeingSigned,
@@ -307,7 +303,12 @@ exports.signTransactionAndSubmit = function signTransactionAndSubmit(
                     console.log(txResponse)
                     // 5. Call update_last_paid
                     if (txSucceeded.succeeded) {
-                        console.log('Payments succeeded')
+                        console.log('** Payments SUCCESS')
+                        return [2 /*return*/, true]
+                    } else {
+                        console.log('** Payments FAILED')
+                        console.log(txSucceeded)
+                        return [2 /*return*/, false]
                     }
                     return [3 /*break*/, 4]
                 case 3:
@@ -337,7 +338,7 @@ exports.signTransactionAndSubmit = function signTransactionAndSubmit(
         })
     })
 }
-
+exports.signTransactionAndSubmit = signTransactionAndSubmit
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         var xrpPayment

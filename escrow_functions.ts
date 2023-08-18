@@ -21,7 +21,8 @@ const enclaveService = new EnclaveService(createAxiosInstance())
 const API_BASE_URL = 'https://trusted-contract-main-api.ntls.io'
 const ISSUER = 'rHqubSujbYhxBRYvdb63RMQYdE5AXJSCbT'
 const ESCROW = 'rs87c62UQPGWRUddpbtws2GPn2Bj4khAgm'
-const ESCROW_PUBLIC_KEY = '03A9FACA59447F3059C66D1574B9B20DE106DE6339BAF4D9BB89D70B6560D8341D'
+const ESCROW_PUBLIC_KEY =
+    '03A9FACA59447F3059C66D1574B9B20DE106DE6339BAF4D9BB89D70B6560D8341D'
 
 // Function to create an instance of Axios with default configuration
 function createAxiosInstance(): AxiosInstance {
@@ -30,7 +31,11 @@ function createAxiosInstance(): AxiosInstance {
     })
 }
 
-async function createUnsignedTransaction(recipient: string, currency_code: string, amount: number): Promise<xrpl.Payment> {
+export async function createUnsignedTransaction(
+    recipient: string,
+    currency_code: string,
+    amount: number
+): Promise<xrpl.Payment> {
     const fromAddress = ESCROW
     const toAddress = recipient
     let convertedAmount: string | IssuedCurrencyAmount = ''
@@ -44,17 +49,18 @@ async function createUnsignedTransaction(recipient: string, currency_code: strin
         }
     }
 
-    const unsignedTx =
-        await xrplService.createUnsignedPaymentTransaction(
-            fromAddress,
-            toAddress,
-            convertedAmount
-        )
+    const unsignedTx = await xrplService.createUnsignedPaymentTransaction(
+        fromAddress,
+        toAddress,
+        convertedAmount
+    )
     // console.log('Create Unsigned Transaction:', unsignedTx)
-    return unsignedTx;
+    return unsignedTx
 }
 
-async function signTransactionAndSubmit(unsignedTx: xrpl.Payment) {
+export async function signTransactionAndSubmit(
+    unsignedTx: xrpl.Payment
+): Promise<boolean | undefined> {
     try {
         const { txnBeingSigned, bytesToSignEncoded } = txnBeforeSign(
             unsignedTx,
@@ -94,9 +100,7 @@ async function signTransactionAndSubmit(unsignedTx: xrpl.Payment) {
                 const txResponse = await withLoggedExchange(
                     '4. Submit transaction: signed, submitting:',
                     async () =>
-                        xrplService.submitAndWaitForSigned(
-                            txnSignedEncoded
-                        ),
+                        xrplService.submitAndWaitForSigned(txnSignedEncoded),
                     txnSignedEncoded
                 )
                 const txSucceeded = checkTxResponseSucceeded(txResponse)
@@ -105,7 +109,12 @@ async function signTransactionAndSubmit(unsignedTx: xrpl.Payment) {
 
                 // 5. Call update_last_paid
                 if (txSucceeded.succeeded) {
-                    console.log('Payments succeeded')
+                    console.log('** Payments SUCCESS')
+                    return true
+                } else {
+                    console.log('** Payments FAILED')
+                    console.log(txSucceeded)
+                    return false
                 }
             } else {
                 throw panic(
@@ -124,9 +133,11 @@ async function signTransactionAndSubmit(unsignedTx: xrpl.Payment) {
     }
 }
 
-async function main(){
-    const xrpPayment= await createUnsignedTransaction('rB97aE2iNAcoSwmRNbm3ycXad6ST5c2V2G', 'XRP', 2)
+async function main() {
+    const xrpPayment = await createUnsignedTransaction(
+        'rB97aE2iNAcoSwmRNbm3ycXad6ST5c2V2G',
+        'XRP',
+        2
+    )
     await signTransactionAndSubmit(xrpPayment)
 }
-
-main()
